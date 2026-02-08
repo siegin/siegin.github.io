@@ -5,140 +5,162 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html lang="en">
-	<head>
-		<title>Generic - Phantom by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+<head>
+    <title>Generic - Phantom by HTML5 UP</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
-		<!-- Slideshow + slider + video styles -->
-		<style>
-			/* Container centered in the page */
-			.ww-shell{
-				width: 100%;
-				display: flex;
-				justify-content: center; /* center the whole block */
-			}
+    <!-- Slideshow + slider + video styles -->
+    <style>
+        /* Container centered in the page */
+        .ww-shell {
+            width: 100%;
+            display: flex;
+            justify-content: center; /* center the whole block */
+        }
 
-			/* Row: slideshow left, slider middle, video right */
-			.ww-row{
-				display: flex;
-				align-items: center;
-				justify-content: center; /* center within available space */
-				gap: 18px;
-				max-width: 100%;
-			}
+        /* Row: slideshow left, slider middle, video right */
+        .ww-row {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* center within available space */
+            gap: 18px;
+            max-width: 100%;
+        }
 
-			/* Stage: size is set by JS to fit the browser (no cropping) */
-			.ww-stage{
-				position: relative;
-				overflow: hidden;   /* required for slide-out animation */
-				border-radius: 8px;
-				background: transparent;
-			}
+        /* Stage: size is set by JS to fit the browser (no cropping) */
+        .ww-stage {
+            position: relative;
+            overflow: hidden; /* required for slide-out animation */
+            border-radius: 8px;
+            background: transparent;
+        }
 
-			/* Slide animation: old exits upward (bottom -> top effect) */
-			.ww-slideWrap{
-				position: absolute;
-				inset: 0;
-				display: grid;
-				place-items: center;
-				transform: translateY(0);
-				opacity: 1;
-				transition: transform 420ms ease, opacity 420ms ease;
-				will-change: transform, opacity;
-			}
+        /* Slide animation: old exits upward (bottom -> top effect) */
+        .ww-slideWrap {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            transform: translateY(0);
+            opacity: 1;
+            transition: transform 420ms ease, opacity 420ms ease;
+            will-change: transform, opacity;
+        }
 
-			.ww-slideWrap.is-leaving{
-				transform: translateY(-100%);
-				opacity: 0;
-			}
+            .ww-slideWrap.is-leaving {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
 
-			.ww-slideWrap.is-entering{
-				transform: translateY(100%);
-				opacity: 0;
-			}
+            .ww-slideWrap.is-entering {
+                transform: translateY(100%);
+                opacity: 0;
+            }
 
-			/* Never crop images */
-			.ww-slideWrap img{
-				width: 100%;
-				height: 100%;
-				object-fit: contain;
-				display: block;
-			}
+            /* Never crop images */
+            .ww-slideWrap img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                display: block;
+            }
 
-			/* Slider on the right of slideshow:
-			   - size (height = stage height, width = height/15) is set by JS
-			   - buttons share height evenly */
-			.ww-dots{
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				user-select: none;
-				gap: 10px;
-			}
+        /* Slider on the right of slideshow:
+               - size (height = stage height, width = height/15) is set by JS
+               - buttons share height evenly */
+        .ww-dots {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            user-select: none;
+            gap: 10px;
+        }
 
-			.ww-dot{
-				width: 100%;
-				flex: 1 1 0;
-				min-height: 12px;
-				border-radius: 3px;
-				border: 1px solid rgba(0,0,0,0.25);
-				background: rgba(0,0,0,0.12);
-				cursor: pointer;
-				padding: 0;
-			}
-			.ww-dot.is-active{ background: rgba(0,0,0,0.45); }
+        .ww-dot {
+            width: 100%;
+            flex: 1 1 0;
+            min-height: 12px;
+            border-radius: 3px;
+            border: 1px solid rgba(0,0,0,0.25);
+            background: rgba(0,0,0,0.12);
+            cursor: pointer;
+            padding: 0;
+        }
 
-			.ww-dot:focus-visible{
-				outline: 2px solid rgba(0,0,0,0.55);
-				outline-offset: 3px;
-			}
+            .ww-dot.is-active {
+                background: rgba(0,0,0,0.45);
+            }
 
-			/* Video on the far right (size set by JS) */
-			.ww-video{
-				border-radius: 8px;
-				overflow: hidden;
-				background: transparent;
-				display: grid;
-				place-items: center;
-			}
-			.ww-video video{
-				width: 100%;
-				height: 100%;
-				object-fit: contain; /* never crop */
-				display: block;
-			}
+            .ww-dot:focus-visible {
+                outline: 2px solid rgba(0,0,0,0.55);
+                outline-offset: 3px;
+            }
 
-			/* On very small screens, allow wrapping so it still fits */
-			@media (max-width: 640px){
-				.ww-row{
-					flex-direction: column;
-				}
-				.ww-dots{
-					flex-direction: row;
-					width: 100% !important;   /* JS sets px; override for mobile row */
-					height: 14px !important;  /* slim strip on mobile */
-				}
-				.ww-dot{
-					height: 100%;
-					min-height: 0;
-				}
-				.ww-video{
-					width: 100% !important;
-					height: auto !important;
-				}
-				.ww-video video{
-					height: auto;
-				}
-			}
+        /* Video on the far right (size set by JS) */
+        .ww-video {
+            border-radius: 8px;
+            overflow: hidden;
+            background: transparent;
+            display: grid;
+            place-items: center;
+        }
 
-			@media (prefers-reduced-motion: reduce){
-				.ww-slideWrap{ transition: none !important; }
-			}
-		</style>
-	</head>
+            .ww-video video {
+                width: 100%;
+                height: 100%;
+                object-fit: contain; /* never crop */
+                display: block;
+            }
+
+        /* On very small screens, allow wrapping so it still fits */
+        @media (max-width: 640px) {
+            .ww-row {
+                flex-direction: column;
+            }
+
+            .ww-dots {
+                flex-direction: row;
+                width: 100% !important; /* JS sets px; override for mobile row */
+                height: 14px !important; /* slim strip on mobile */
+            }
+
+            .ww-dot {
+                height: 100%;
+                min-height: 0;
+            }
+
+            .ww-video {
+                width: 100% !important;
+                height: auto !important;
+            }
+
+                .ww-video video {
+                    height: auto;
+                }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .ww-slideWrap {
+                transition: none !important;
+            }
+        }
+        .video-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            aspect-ratio: 9 / 16;
+            margin: 0 auto;
+        }
+
+        .video-wrap iframe {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
 
 	<body class="is-preload">
 		<div id="wrapper">
@@ -179,20 +201,47 @@
 
 							<!-- Slider buttons (auto-generated) -->
 							<div class="ww-dots" id="wwDots" aria-label="Slide selector"></div>
+						</div>
 
-							<!-- Video (right of slider) -->
-							<div class="ww-video" id="wwVideo" aria-label="WWa video">
-								<iframe width="100%"
+						<div id="video-container"></div>
+
+						<script>
+							fetch("https://ipapi.co/json/")
+								.then(res => res.json())
+								.then(data => {
+									const isChina = data.country === "CN";
+									document.getElementById("video-container").innerHTML =
+										isChina
+											? `<iframe
+										src="https://player.bilibili.com/player.html?bvid=你的BVID"
+										width="100%"
 										height="480"
-										src="https://www.youtube.com/shorts/0hc0xK4qXK4"
 										frameborder="0"
 										allowfullscreen>
-								</iframe>
-
-								</video>
-							</div>
-						</div>
+									  </iframe>`
+											: `<iframe
+										src="https://www.youtube.com/embed/0hc0xK4qXK4"
+										width="100%"
+										height="480"
+										frameborder="0"
+										allowfullscreen>
+									  </iframe>`;
+								})
+								.catch(() => {
+									// 如果 IP API 失败，默认用 YouTube
+									document.getElementById("video-container").innerHTML =
+										`<iframe
+									  src="https://www.youtube.com/embed/0hc0xK4qXK4"
+									  width="100%"
+									  height="480"
+									  frameborder="0"
+									  allowfullscreen>
+								   </iframe>`;
+								});
+						</script>
 					</div>
+
+
 					<p></p>
 					<p>Live2D Art: Siegin</p>
 					<p>Live2D Model: 抱蛋海产</p>
