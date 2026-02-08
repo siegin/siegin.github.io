@@ -26,7 +26,7 @@
             display: flex;
             align-items: center;
             justify-content: center; /* center within available space */
-            gap: 18px;
+            gap: 36px;
             max-width: 100%;
         }
 
@@ -150,7 +150,7 @@
         .video-wrap {
             position: relative;
             width: 100%;
-            max-width: 360px;
+            max-width: 480px;
             aspect-ratio: 9 / 16;
             margin: 0 auto;
         }
@@ -203,43 +203,56 @@
 							<div class="ww-dots" id="wwDots" aria-label="Slide selector"></div>
 						</div>
 
-						<div id="video-container"></div>
+												<div class="ww-video" id="wwVideo">
+							<div id="video-container"></div>
 
-						<script>
-							fetch("https://ipapi.co/json/")
-								.then(res => res.json())
-								.then(data => {
-									const isChina = data.country === "CN";
-									document.getElementById("video-container").innerHTML =
-										isChina
-											? `<iframe
-										src="https://player.bilibili.com/player.html?bvid=你的BVID"
-										width="100%"
-										height="480"
-										frameborder="0"
-										allowfullscreen>
-									  </iframe>`
-											: `<iframe
-										src="https://www.youtube.com/embed/0hc0xK4qXK4"
-										width="100%"
-										height="480"
-										frameborder="0"
-										allowfullscreen>
-									  </iframe>`;
-								})
-								.catch(() => {
-									// 如果 IP API 失败，默认用 YouTube
-									document.getElementById("video-container").innerHTML =
-										`<iframe
-									  src="https://www.youtube.com/embed/0hc0xK4qXK4"
-									  width="100%"
-									  height="480"
-									  frameborder="0"
-									  allowfullscreen>
-								   </iframe>`;
-								});
-						</script>
-					</div>
+							<script>
+								fetch("https://ipapi.co/json/")
+									.then(res => res.json())
+									.then(data => {
+										const isChina = data.country === "CN";
+                                        document.getElementById("video-container").innerHTML =
+                                            `<div class="video-wrap">
+											 <iframe
+											   src="https://www.youtube.com/embed/0hc0xK4qXK4"
+											   allowfullscreen>
+											 </iframe>
+										   </div>`;
+											isChina
+												? `<iframe
+														src="https://player.bilibili.com/player.html?bvid=你的BVID&high_quality=1&danmaku=0"
+														width="100%"
+														height="480"
+														frameborder="0"
+														allowfullscreen>
+													</iframe>`
+												: `<iframe
+														src="https://www.youtube.com/embed/0hc0xK4qXK4"
+														width="100%"
+														height="480"
+														frameborder="0"
+														allowfullscreen>
+													</iframe>`;
+									})
+									.catch(() => {
+										// 如果 IP API 失败，默认用 YouTube
+                                        document.getElementById("video-container").innerHTML =
+                                            `<div class="video-wrap">
+											 <iframe
+												src="https://www.youtube.com/embed/0hc0xK4qXK4"
+												allowfullscreen>
+											 </iframe>
+											</div>`;
+											`<iframe
+												src="https://www.youtube.com/embed/0hc0xK4qXK4"
+												width="100%"
+												height="480"
+												frameborder="0"
+												allowfullscreen>
+											</iframe>`;
+									});
+							</script>
+						</div>
 
 
 					<p></p>
@@ -293,8 +306,8 @@
 				const SLIDE_RATIO_W = 9;     // portrait 9:16
 				const SLIDE_RATIO_H = 16;
 				const SLIDER_RATIO_HW = 15; // height:width = 15:1
-				const VIDEO_RATIO_HW = 4/3;   // height:width = 5:1 (smaller = wider video). adjust if needed
-				const GAP_PX = 18;          // must match CSS gap in .ww-row
+				const VIDEO_RATIO_HW = 2;   // height:width = 5:1 (smaller = wider video). adjust if needed
+				const GAP_PX = 36;          // must match CSS gap in .ww-row
 				const ANIM_MS = 420;
 
 				const slides = [
