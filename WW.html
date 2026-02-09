@@ -13,145 +13,122 @@
 	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
 	<style>
-		/* Overall WW block */
-		.ww-shell {
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-			gap: 18px;
+		.ww-shell{
+			width:100%;
+			display:flex;
+			flex-direction:column;
+			gap:18px;
 		}
 
-		/* TOP row: left media + right video */
-		.ww-top {
-			width: 100%;
-			display: flex;
-			align-items: stretch; /* IMPORTANT: prevent overlap */
-			justify-content: center;
-			gap: 18px; /* keep in sync with JS GAP_PX */
-			flex-wrap: nowrap;
+		.ww-top{
+			width:100%;
+			display:flex;
+			align-items:stretch;
+			justify-content:center;
+			gap:18px; /* keep in sync with JS GAP_PX */
+			flex-wrap:nowrap;
 		}
 
-		/* Left side = stage + dots */
-		.ww-left {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 18px;
-			flex: 0 0 auto;
-			min-width: 0;
+		.ww-left{
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			gap:18px;
+			flex:0 0 auto;
+			min-width:0;
 		}
 
-		/* Stage sized by JS */
-		.ww-stage {
-			position: relative;
-			overflow: hidden;
-			border-radius: 10px;
-			background: transparent;
-			flex: 0 0 auto;
+		.ww-stage{
+			position:relative;
+			overflow:hidden;
+			border-radius:10px;
+			background:transparent;
+			flex:0 0 auto;
 		}
 
-		/* Slide animation */
-		.ww-slideWrap {
-			position: absolute;
-			inset: 0;
-			display: grid;
-			place-items: center;
-			transform: translateY(0);
-			opacity: 1;
-			transition: transform 420ms ease, opacity 420ms ease;
-			will-change: transform, opacity;
+		.ww-slideWrap{
+			position:absolute;
+			inset:0;
+			display:grid;
+			place-items:center;
+			transform:translateY(0);
+			opacity:1;
+			transition:transform 420ms ease, opacity 420ms ease;
+			will-change:transform, opacity;
+		}
+		.ww-slideWrap.is-leaving{ transform:translateY(-100%); opacity:0; }
+		.ww-slideWrap.is-entering{ transform:translateY(100%); opacity:0; }
+
+		.ww-slideWrap img{
+			width:100%;
+			height:100%;
+			object-fit:contain;
+			display:block;
 		}
 
-			.ww-slideWrap.is-leaving {
-				transform: translateY(-100%);
-				opacity: 0;
+		.ww-dots{
+			display:flex;
+			flex-direction:column;
+			justify-content:space-between;
+			user-select:none;
+			gap:10px;
+
+			position:relative;
+			z-index:5; /* always clickable */
+			flex:0 0 auto;
+		}
+
+		.ww-dot{
+			width:100%;
+			flex:1 1 0;
+			min-height:12px;
+			border-radius:4px;
+			border:1px solid rgba(0,0,0,0.25);
+			background:rgba(0,0,0,0.12);
+			cursor:pointer;
+			padding:0;
+		}
+		.ww-dot.is-active{ background:rgba(0,0,0,0.45); }
+		.ww-dot:focus-visible{
+			outline:2px solid rgba(0,0,0,0.55);
+			outline-offset:3px;
+		}
+
+		.ww-video{
+			flex:0 0 auto;
+			min-width:0;
+			background:#000;     /* visible even before iframe sizes */
+			border-radius:10px; /* match */
+			overflow:hidden;
+		}
+
+		.video-wrap{
+			width:100%;
+			height:100%;
+			position:relative;
+			overflow:hidden;
+			background:#000;
+		}
+
+		/* iframe "cover" sizing is set by JS */
+		.video-wrap iframe{
+			position:absolute;
+			top:50%;
+			left:50%;
+			transform:translate(-50%,-50%);
+			border:0;
+		}
+
+		.ww-desc p{ margin:0 0 10px 0; }
+
+		@media (max-width:640px){
+			.ww-top{
+				flex-direction:column;
+				align-items:center;
 			}
-
-			.ww-slideWrap.is-entering {
-				transform: translateY(100%);
-				opacity: 0;
-			}
-
-			/* Never crop images */
-			.ww-slideWrap img {
-				width: 100%;
-				height: 100%;
-				object-fit: contain;
-				display: block;
-			}
-
-		/* Dots column */
-		.ww-dots {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			user-select: none;
-			gap: 10px;
-			position: relative; /* ensure clickable layer */
-			z-index: 5;
-			flex: 0 0 auto;
-		}
-
-		.ww-dot {
-			width: 100%;
-			flex: 1 1 0;
-			min-height: 12px;
-			border-radius: 4px;
-			border: 1px solid rgba(0,0,0,0.25);
-			background: rgba(0,0,0,0.12);
-			cursor: pointer;
-			padding: 0;
-			pointer-events: auto;
-		}
-
-			.ww-dot.is-active {
-				background: rgba(0,0,0,0.45);
-			}
-
-			.ww-dot:focus-visible {
-				outline: 2px solid rgba(0,0,0,0.55);
-				outline-offset: 3px;
-			}
-
-		/* Video box sized by JS */
-		.ww-video {
-			flex: 0 0 auto;
-			min-width: 0;
-		}
-
-		/* COVER-style iframe cropping (no black bars, no stretch) */
-		.video-wrap {
-			width: 100%;
-			height: 100%;
-			position: relative;
-			overflow: hidden;
-			border-radius: 10px;
-			background: transparent;
-		}
-
-			.video-wrap iframe {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				border: 0;
-				transform: translate(-50%, -50%);
-			}
-
-		/* Descriptions below */
-		.ww-desc p {
-			margin: 0 0 10px 0;
-		}
-
-		/* Mobile: stack vertically */
-		@media (max-width: 640px) {
-			.ww-top {
-				flex-direction: column;
-				align-items: center;
-			}
-
-			.ww-left {
-				flex-direction: row;
-				align-items: center;
+			.ww-left{
+				flex-direction:row;
+				align-items:center;
 			}
 		}
 	</style>
@@ -166,9 +143,7 @@
 					<span class="symbol"><img src="images/Logo.jpg" alt="" /></span><span class="title">金亖</span>
 				</a>
 				<nav>
-					<ul>
-						<li><a href="#menu">Menu</a></li>
-					</ul>
+					<ul><li><a href="#menu">Menu</a></li></ul>
 				</nav>
 			</div>
 		</header>
@@ -188,6 +163,7 @@
 
 				<div class="ww-shell">
 					<div class="ww-top" id="wwTop">
+
 						<div class="ww-left" id="wwLeft">
 							<div class="ww-stage" id="wwStage" aria-label="WW slideshow"></div>
 							<div class="ww-dots" id="wwDots" aria-label="Slide selector"></div>
@@ -196,6 +172,7 @@
 						<div class="ww-video" id="wwVideo">
 							<div id="video-container"></div>
 						</div>
+
 					</div>
 
 					<div class="ww-desc">
@@ -250,14 +227,15 @@
 	<script>
 		(function () {
 			// --- CONFIG ---
-			const SLIDE_RATIO_W = 9;        // portrait image: 9:16
+			const SLIDE_RATIO_W = 9;
 			const SLIDE_RATIO_H = 16;
 
-			const VIDEO_ASPECT_W = 16;      // ✅ video is 16:9
+			// ✅ FIX: video is 16:9 (you had 9/16 before)
+			const VIDEO_ASPECT_W = 16;
 			const VIDEO_ASPECT_H = 9;
 
-			const SLIDER_RATIO_HW = 15;     // dots: height:width = 15:1
-			const GAP_PX = 18;              // MUST match CSS gap
+			const SLIDER_RATIO_HW = 15;
+			const GAP_PX = 18;
 			const ANIM_MS = 420;
 
 			const slides = [
@@ -299,7 +277,7 @@
 					const btn = document.createElement("button");
 					btn.type = "button";
 					btn.className = "ww-dot";
-					btn.setAttribute("aria-label", `Show slide ${i + 1}`);
+					btn.setAttribute("aria-label", "Show slide " + (i + 1));
 					btn.addEventListener("click", () => goTo(i));
 					dotsWrap.appendChild(btn);
 					return btn;
@@ -330,6 +308,7 @@
 				}, ANIM_MS);
 			}
 
+			// Cover-fit the iframe into the video box (no black bars, no stretch)
 			function fitVideoCover() {
 				const wrap = videoBox.querySelector(".video-wrap");
 				const iframe = wrap ? wrap.querySelector("iframe") : null;
@@ -337,18 +316,21 @@
 
 				const boxW = wrap.clientWidth;
 				const boxH = wrap.clientHeight;
-				if (boxW <= 0 || boxH <= 0) return; // guard
 
-				const videoRatio = VIDEO_ASPECT_W / VIDEO_ASPECT_H; // 16/9
+				// If layout not ready yet, retry once shortly
+				if (boxW <= 0 || boxH <= 0) {
+					setTimeout(fitVideoCover, 60);
+					return;
+				}
+
+				const videoRatio = VIDEO_ASPECT_W / VIDEO_ASPECT_H;
 				const boxRatio = boxW / boxH;
 
 				let w, h;
 				if (boxRatio > videoRatio) {
-					// box is wider → scale by width
 					w = boxW;
 					h = Math.ceil(boxW / videoRatio);
 				} else {
-					// box is taller → scale by height
 					h = boxH;
 					w = Math.ceil(boxH * videoRatio);
 				}
@@ -372,7 +354,6 @@
 					dotsWrap.style.height = stageH + "px";
 					dotsWrap.style.width = Math.max(44, Math.floor(stageH / SLIDER_RATIO_HW)) + "px";
 
-					// video below: same height as image
 					videoBox.style.width = stageW + "px";
 					videoBox.style.height = stageH + "px";
 
@@ -390,7 +371,7 @@
 				h = Math.max(260, h);
 
 				const stageW = Math.floor(h * SLIDE_RATIO_W / SLIDE_RATIO_H);
-				const dotsW = Math.max(44, Math.floor(h / SLIDER_RATIO_HW));
+				const dotsW  = Math.max(44, Math.floor(h / SLIDER_RATIO_HW));
 				const videoW = Math.floor(h * VIDEO_ASPECT_W / VIDEO_ASPECT_H);
 
 				stage.style.width = stageW + "px";
@@ -405,51 +386,26 @@
 				fitVideoCover();
 			}
 
-			// Insert video iframe and re-fit AFTER it is ready
-			function loadVideo() {
-				function setVideo(html) {
-					videoContainer.innerHTML = html;
-					const iframe = videoContainer.querySelector("iframe");
-					if (iframe) {
-						// Re-fit after iframe actually loads
-						iframe.addEventListener("load", () => {
-							fitToBrowser();
-							// tiny delayed refit in case layout settles
-							setTimeout(() => { fitToBrowser(); }, 50);
-						});
-					}
-				}
+			// ✅ ALWAYS render a video immediately (no external fetch)
+			function loadVideoNow() {
+				videoContainer.innerHTML =
+					`<div class="video-wrap">
+						<iframe
+							src="https://www.youtube-nocookie.com/embed/0hc0xK4qXK4"
+							title="YouTube video"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							allowfullscreen
+							referrerpolicy="strict-origin-when-cross-origin">
+						</iframe>
+					</div>`;
 
-				fetch("https://ipapi.co/json/")
-					.then(res => res.json())
-					.then(data => {
-						const isChina = data.country === "CN";
-						setVideo(
-							isChina
-								? `<div class="video-wrap">
-										 <iframe
-										   src="https://player.bilibili.com/player.html?bvid=你的BVID&high_quality=1&danmaku=0"
-										   allowfullscreen>
-										 </iframe>
-									   </div>`
-								: `<div class="video-wrap">
-										 <iframe
-										   src="https://www.youtube.com/embed/0hc0xK4qXK4"
-										   allowfullscreen>
-										 </iframe>
-									   </div>`
-						);
-					})
-					.catch(() => {
-						setVideo(
-							`<div class="video-wrap">
-									 <iframe
-									   src="https://www.youtube.com/embed/0hc0xK4qXK4"
-									   allowfullscreen>
-									 </iframe>
-								 </div>`
-						);
+				const iframe = videoContainer.querySelector("iframe");
+				if (iframe) {
+					iframe.addEventListener("load", () => {
+						fitToBrowser();
+						setTimeout(fitToBrowser, 50);
 					});
+				}
 			}
 
 			// Init
@@ -458,7 +414,7 @@
 			stage.appendChild(currentWrap);
 			setActiveDot(0);
 
-			loadVideo();
+			loadVideoNow();
 
 			window.addEventListener("load", fitToBrowser);
 			window.addEventListener("resize", fitToBrowser);
