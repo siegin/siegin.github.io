@@ -6,26 +6,21 @@
 -->
 <html lang="en">
 <head>
-	<title>Generic - Phantom by HTML5 UP</title>
+	<title>WW</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
 	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
 	<style>
-		.ww-shell{
-			width:100%;
-			display:flex;
-			flex-direction:column;
-			gap:18px;
-		}
+		.ww-shell{ width:100%; display:flex; flex-direction:column; gap:18px; }
 
 		.ww-top{
 			width:100%;
 			display:flex;
 			align-items:stretch;
 			justify-content:center;
-			gap:18px; /* keep in sync with JS GAP_PX */
+			gap:18px;
 			flex-wrap:nowrap;
 		}
 
@@ -59,12 +54,7 @@
 		.ww-slideWrap.is-leaving{ transform:translateY(-100%); opacity:0; }
 		.ww-slideWrap.is-entering{ transform:translateY(100%); opacity:0; }
 
-		.ww-slideWrap img{
-			width:100%;
-			height:100%;
-			object-fit:contain;
-			display:block;
-		}
+		.ww-slideWrap img{ width:100%; height:100%; object-fit:contain; display:block; }
 
 		.ww-dots{
 			display:flex;
@@ -72,9 +62,8 @@
 			justify-content:space-between;
 			user-select:none;
 			gap:10px;
-
 			position:relative;
-			z-index:5; /* always clickable */
+			z-index:5;
 			flex:0 0 auto;
 		}
 
@@ -89,16 +78,12 @@
 			padding:0;
 		}
 		.ww-dot.is-active{ background:rgba(0,0,0,0.45); }
-		.ww-dot:focus-visible{
-			outline:2px solid rgba(0,0,0,0.55);
-			outline-offset:3px;
-		}
 
 		.ww-video{
 			flex:0 0 auto;
 			min-width:0;
-			background:#000;     /* visible even before iframe sizes */
-			border-radius:10px; /* match */
+			background:#000;
+			border-radius:10px;
 			overflow:hidden;
 		}
 
@@ -110,7 +95,6 @@
 			background:#000;
 		}
 
-		/* iframe "cover" sizing is set by JS */
 		.video-wrap iframe{
 			position:absolute;
 			top:50%;
@@ -122,14 +106,8 @@
 		.ww-desc p{ margin:0 0 10px 0; }
 
 		@media (max-width:640px){
-			.ww-top{
-				flex-direction:column;
-				align-items:center;
-			}
-			.ww-left{
-				flex-direction:row;
-				align-items:center;
-			}
+			.ww-top{ flex-direction:column; align-items:center; }
+			.ww-left{ flex-direction:row; align-items:center; }
 		}
 	</style>
 </head>
@@ -142,9 +120,7 @@
 				<a href="index.html" class="logo">
 					<span class="symbol"><img src="images/Logo.jpg" alt="" /></span><span class="title">金亖</span>
 				</a>
-				<nav>
-					<ul><li><a href="#menu">Menu</a></li></ul>
-				</nav>
+				<nav><ul><li><a href="#menu">Menu</a></li></ul></nav>
 			</div>
 		</header>
 
@@ -162,9 +138,9 @@
 				<h1>WW</h1>
 
 				<div class="ww-shell">
-					<div class="ww-top" id="wwTop">
+					<div class="ww-top">
 
-						<div class="ww-left" id="wwLeft">
+						<div class="ww-left">
 							<div class="ww-stage" id="wwStage" aria-label="WW slideshow"></div>
 							<div class="ww-dots" id="wwDots" aria-label="Slide selector"></div>
 						</div>
@@ -190,7 +166,6 @@
 					<h2>Where to find me?</h2>
 					<p>Find me on other platforms or email provide (๑´ㅂ`๑)</p>
 				</section>
-
 				<section>
 					<h2>Follow</h2>
 					<ul class="icons">
@@ -208,7 +183,6 @@
 						<li><a href="about.html" class="icon solid style2 fa-envelope"><span class="label">Email</span></a></li>
 					</ul>
 				</section>
-
 				<ul class="copyright">
 					<li>&copy; Untitled. All rights reserved</li>
 					<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
@@ -226,13 +200,13 @@
 
 	<script>
 		(function () {
-			// --- CONFIG ---
+			// Slideshow image ratio (portrait)
 			const SLIDE_RATIO_W = 9;
 			const SLIDE_RATIO_H = 16;
 
-			// ✅ FIX: video is 16:9 (you had 9/16 before)
-			const VIDEO_ASPECT_W = 16;
-			const VIDEO_ASPECT_H = 9;
+			// ✅ Shorts are portrait (9:16)
+			const VIDEO_ASPECT_W = 9;
+			const VIDEO_ASPECT_H = 16;
 
 			const SLIDER_RATIO_HW = 15;
 			const GAP_PX = 18;
@@ -258,11 +232,9 @@
 			function createSlideWrap(i) {
 				const wrap = document.createElement("div");
 				wrap.className = "ww-slideWrap";
-
 				const img = document.createElement("img");
 				img.src = slides[i].src;
 				img.alt = slides[i].alt;
-
 				wrap.appendChild(img);
 				return wrap;
 			}
@@ -293,7 +265,6 @@
 				const nextWrap = createSlideWrap(nextIndex);
 				nextWrap.classList.add("is-entering");
 				stage.appendChild(nextWrap);
-
 				void nextWrap.offsetWidth;
 
 				if (currentWrap) currentWrap.classList.add("is-leaving");
@@ -308,7 +279,6 @@
 				}, ANIM_MS);
 			}
 
-			// Cover-fit the iframe into the video box (no black bars, no stretch)
 			function fitVideoCover() {
 				const wrap = videoBox.querySelector(".video-wrap");
 				const iframe = wrap ? wrap.querySelector("iframe") : null;
@@ -316,14 +286,9 @@
 
 				const boxW = wrap.clientWidth;
 				const boxH = wrap.clientHeight;
+				if (boxW <= 0 || boxH <= 0) { setTimeout(fitVideoCover, 60); return; }
 
-				// If layout not ready yet, retry once shortly
-				if (boxW <= 0 || boxH <= 0) {
-					setTimeout(fitVideoCover, 60);
-					return;
-				}
-
-				const videoRatio = VIDEO_ASPECT_W / VIDEO_ASPECT_H;
+				const videoRatio = VIDEO_ASPECT_W / VIDEO_ASPECT_H; // 9/16
 				const boxRatio = boxW / boxH;
 
 				let w, h;
@@ -361,7 +326,10 @@
 					return;
 				}
 
-				// Desktop: width = stageW + dotsW + videoW + 2 gaps
+				// Desktop width = stageW + dotsW + videoW + 2 gaps
+				// stageW = h*(9/16)
+				// dotsW  = h/15
+				// videoW = h*(9/16)  (portrait shorts)
 				const coeff =
 					(SLIDE_RATIO_W / SLIDE_RATIO_H) +
 					(1 / SLIDER_RATIO_HW) +
@@ -386,16 +354,17 @@
 				fitVideoCover();
 			}
 
-			// ✅ ALWAYS render a video immediately (no external fetch)
-			function loadVideoNow() {
+			// ✅ Shorts-safe embed
+			function loadShortsVideoNow() {
+				const SHORTS_ID = "YOUR_SHORTS_ID"; // <-- replace this
+
 				videoContainer.innerHTML =
 					`<div class="video-wrap">
 						<iframe
-							src="https://www.youtube-nocookie.com/embed/0hc0xK4qXK4"
-							title="YouTube video"
+							src="https://www.youtube.com/embed/${SHORTS_ID}?rel=0&playsinline=1"
+							title="YouTube Shorts"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							allowfullscreen
-							referrerpolicy="strict-origin-when-cross-origin">
+							allowfullscreen>
 						</iframe>
 					</div>`;
 
@@ -414,7 +383,7 @@
 			stage.appendChild(currentWrap);
 			setActiveDot(0);
 
-			loadVideoNow();
+			loadShortsVideoNow();
 
 			window.addEventListener("load", fitToBrowser);
 			window.addEventListener("resize", fitToBrowser);
