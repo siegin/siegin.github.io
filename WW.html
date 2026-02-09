@@ -6,71 +6,70 @@
 -->
 <html lang="en">
 <head>
-    <title>Generic - Phantom by HTML5 UP</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	<title>Generic - Phantom by HTML5 UP</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 
-    <!-- Slideshow + slider + video styles -->
-    <style>
-        /* Container centered in the page */
-        .ww-shell {
-            width: 100%;
-            display: flex;
-            justify-content: center; /* center the whole block */
-        }
+	<style>
+		/* Overall WW block */
+		.ww-shell {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+		}
 
-        /* Row: slideshow left, slider middle, video right */
-        .ww-row {
-            display: flex;
-            align-items: center;
-            justify-content: center; /* center within available space */
-            gap: 36px;
-            max-width: 100%;
-        }
+		/* TOP row: left media + right video (same height) */
+		.ww-top {
+			width: 100%;
+			display: flex;
+			align-items: flex-start;
+			justify-content: center;
+			gap: 18px; /* keep in sync with JS GAP_PX */
+		}
 
-        /* Stage: size is set by JS to fit the browser (no cropping) */
-        .ww-stage {
-            position: relative;
-            overflow: hidden; /* required for slide-out animation */
-            border-radius: 8px;
-            background: transparent;
-        }
+		/* Left side = stage + dots */
+		.ww-left {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 18px; /* keep in sync with JS GAP_PX */
+			flex: 0 0 auto;
+		}
 
-        /* Slide animation: old exits upward (bottom -> top effect) */
-        .ww-slideWrap {
-            position: absolute;
-            inset: 0;
-            display: grid;
-            place-items: center;
-            transform: translateY(0);
-            opacity: 1;
-            transition: transform 420ms ease, opacity 420ms ease;
-            will-change: transform, opacity;
-        }
+		/* Stage: size is set by JS */
+		.ww-stage {
+			position: relative;
+			overflow: hidden;
+			border-radius: 10px;
+			background: transparent;
+		}
 
-        .ww-slideWrap.is-leaving {
-            transform: translateY(-100%);
-            opacity: 0;
-        }
+		/* Slide animation */
+		.ww-slideWrap {
+			position: absolute;
+			inset: 0;
+			display: grid;
+			place-items: center;
+			transform: translateY(0);
+			opacity: 1;
+			transition: transform 420ms ease, opacity 420ms ease;
+			will-change: transform, opacity;
+		}
+		.ww-slideWrap.is-leaving { transform: translateY(-100%); opacity: 0; }
+		.ww-slideWrap.is-entering { transform: translateY(100%); opacity: 0; }
 
-        .ww-slideWrap.is-entering {
-            transform: translateY(100%);
-            opacity: 0;
-        }
+		/* Never crop images */
+		.ww-slideWrap img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			display: block;
+		}
 
-        /* Never crop images */
-        .ww-slideWrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-
-		/* Slider on the right of slideshow:
-				- size (height = stage height, width = height/15) is set by JS
-				- buttons share height evenly */
+		/* Dots column (height set by JS) */
 		.ww-dots {
 			display: flex;
 			flex-direction: column;
@@ -78,361 +77,343 @@
 			user-select: none;
 			gap: 10px;
 		}
-
 		.ww-dot {
 			width: 100%;
 			flex: 1 1 0;
 			min-height: 12px;
-			border-radius: 3px;
+			border-radius: 4px;
 			border: 1px solid rgba(0,0,0,0.25);
 			background: rgba(0,0,0,0.12);
 			cursor: pointer;
 			padding: 0;
 		}
+		.ww-dot.is-active { background: rgba(0,0,0,0.45); }
+		.ww-dot:focus-visible {
+			outline: 2px solid rgba(0,0,0,0.55);
+			outline-offset: 3px;
+		}
 
-        .ww-dot.is-active {
-            background: rgba(0,0,0,0.45);
-        }
+		/* Video box (width/height set by JS) */
+		.ww-video {
+			flex: 0 0 auto;
+		}
 
-        .ww-dot:focus-visible {
-            outline: 2px solid rgba(0,0,0,0.55);
-            outline-offset: 3px;
-        }
-
-		/* Video on the far right (size set by JS) */
-		.ww-video
-			{
-			border-radius: 8px;
+		.video-wrap, .video-wrap iframe {
+			width: 100%;
+			height: 100%;
+			display: block;
+			border: 0;
+			border-radius: 10px; /* match image rounding */
 			overflow: hidden;
-			background: transparent;
-			display: grid;
-			place-items: center;
-			}
+		}
 
-        .ww-video video
-			{
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* never crop */
-            display: block;
-			}
+		/* Descriptions below */
+		.ww-desc {
+			width: 100%;
+		}
+		.ww-desc p {
+			margin: 0 0 10px 0;
+		}
 
-    /* On very small screens, allow wrapping so it still fits */
-    @media (max-width: 640px)
-	{
-        .ww-row
-			{
-            flex-direction: column;
+		/* Mobile: stack media vertically */
+		@media (max-width: 640px) {
+			.ww-top {
+				flex-direction: column;
+				align-items: center;
 			}
-
-        .ww-dots
-			{
-            flex-direction: row;
-            width: 100% !important; /* JS sets px; override for mobile row */
-            height: 14px !important; /* slim strip on mobile */
+			.ww-left {
+				flex-direction: row;
 			}
-
-        .ww-dot
-			{
-            height: 100%;
-            min-height: 0;
+			.ww-desc {
+				text-align: left;
 			}
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .ww-slideWrap
-		{transition: none !important;}
-    }
-    </style>
+		}
+	</style>
 </head>
 
-	<body class="is-preload">
-		<div id="wrapper">
+<body class="is-preload">
+	<div id="wrapper">
 
-			<!-- Header -->
-			<header id="header">
-				<div class="inner">
-					<a href="index.html" class="logo">
-						<span class="symbol"><img src="images/Logo.jpg" alt="" /></span><span class="title">金亖</span>
-					</a>
-					<nav>
-						<ul>
-							<li><a href="#menu">Menu</a></li>
-						</ul>
-					</nav>
-				</div>
-			</header>
+		<!-- Header -->
+		<header id="header">
+			<div class="inner">
+				<a href="index.html" class="logo">
+					<span class="symbol"><img src="images/Logo.jpg" alt="" /></span><span class="title">金亖</span>
+				</a>
 
-			<!-- Menu -->
-			<nav id="menu">
-				<h2>Menu</h2>
-				<ul>
-					<li><a href="index.html">Home</a></li>
-					<li><a href="commission.html">Commission</a></li>
-					<li><a href="about.html">About</a></li>
-				</ul>
-			</nav>
+				<nav>
+					<ul>
+						<li><a href="#menu">Menu</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
 
-			<!-- Main (slideshow + slider + video, centered) -->
-			<div id="main">
-				<div class="inner">
-					<h1>WW</h1>
+		<!-- Menu -->
+		<nav id="menu">
+			<h2>Menu</h2>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="commission.html">Commission</a></li>
+				<li><a href="about.html">About</a></li>
+			</ul>
+		</nav>
 
-					<div class="ww-shell">
-						<div class="ww-row" id="wwRow">
-							<!-- Stage -->
+		<!-- Main -->
+		<div id="main">
+			<div class="inner">
+				<h1>WW</h1>
+
+				<div class="ww-shell">
+
+					<!-- TOP: image (left) + video (right), same height -->
+					<div class="ww-top" id="wwTop">
+
+						<div class="ww-left" id="wwLeft">
 							<div class="ww-stage" id="wwStage" aria-label="WW slideshow"></div>
-
-							<!-- Slider buttons (auto-generated) -->
 							<div class="ww-dots" id="wwDots" aria-label="Slide selector"></div>
 						</div>
 
-							<div class="ww-video" id="wwVideo">
+						<div class="ww-video" id="wwVideo">
 							<div id="video-container"></div>
-
-							<script>
-								fetch("https://ipapi.co/json/")
-									.then(res => res.json())
-									.then(data => {
-										const isChina = data.country === "CN";
-                                        document.getElementById("video-container").innerHTML =
-                                            `<div class="video-wrap">
-											 <iframe
-											   src="https://www.youtube.com/embed/0hc0xK4qXK4"
-											   allowfullscreen>
-											 </iframe>
-										   </div>`;
-											isChina
-												? `<iframe
-														src="https://player.bilibili.com/player.html?bvid=你的BVID&high_quality=1&danmaku=0"
-														width="100%"
-														height="480"
-														frameborder="0"
-														allowfullscreen>
-													</iframe>`
-												: `<iframe
-														src="https://www.youtube.com/embed/0hc0xK4qXK4"
-														width="100%"
-														height="480"
-														frameborder="0"
-														allowfullscreen>
-													</iframe>`;
-									})
-									.catch(() => {
-										// 如果 IP API 失败，默认用 YouTube
-                                        document.getElementById("video-container").innerHTML =
-                                            `<div class="video-wrap">
-											 <iframe
-												src="https://www.youtube.com/embed/0hc0xK4qXK4"
-												allowfullscreen>
-											 </iframe>
-											</div>`;
-											`<iframe
-												src="https://www.youtube.com/embed/0hc0xK4qXK4"
-												width="100%"
-												height="480"
-												frameborder="0"
-												allowfullscreen>
-											</iframe>`;
-									});
-							</script>
 						</div>
 
+					</div>
 
-					<p></p>
-					<p>Live2D Art: Siegin</p>
-					<p>Live2D Model: 抱蛋海产</p>
+					<!-- Descriptions below -->
+					<div class="ww-desc">
+						<p>Live2D Art: Siegin</p>
+						<p>Live2D Model: 抱蛋海产</p>
+					</div>
+
 				</div>
 			</div>
-
-			<footer id="footer">
-				<div class="inner">
-					<section>
-						<h2>Where to find me?</h2>
-						<p>Find me on other platforms or email provide (๑´ㅂ`๑)</p>
-						<section>
-							<h2>Follow</h2>
-							<ul class="icons">
-								<li><a href="https://x.com/siegin403" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a></li>
-								<li>
-									<a href="https://space.bilibili.com/3690977074088362" class="icon style2 bilibili"
-									   aria-label="Bilibili"
-									   target="_blank"
-									   rel="noopener"><span class="icon-inner"><img src="images/bilibili.svg" alt=""></span> <span class="label">Bilibili</span></a>
-								</li>
-								<li><a href="about.html" class="icon solid style2 fa-envelope"><span class="label">Email</span></a></li>
-							</ul>
-						</section>
-						<ul class="copyright">
-							<li>&copy; Untitled. All rights reserved</li>
-							<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-						</ul>
-				</div>
-			</footer>
-
 		</div>
 
-		<!-- Template scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+		<!-- Footer -->
+		<footer id="footer">
+			<div class="inner">
+				<section>
+					<h2>Where to find me?</h2>
+					<p>Find me on other platforms or email provide (๑´ㅂ`๑)</p>
+				</section>
 
-		<!-- Slideshow logic:
-		     - slider on the right
-		     - click -> old slide exits upward (bottom-to-top)
-		     - stage/slider/video sizes auto-fit the browser without cropping
-		-->
-		<script>
-			(function () {
-				// --- CONFIG ---
-				const SLIDE_RATIO_W = 9;     // portrait 9:16
-				const SLIDE_RATIO_H = 16;
-				const SLIDER_RATIO_HW = 15; // height:width = 15:1
-				const VIDEO_RATIO_HW = 2;   // height:width = 5:1 (smaller = wider video). adjust if needed
-				const GAP_PX = 36;          // must match CSS gap in .ww-row
-				const ANIM_MS = 420;
+				<section>
+					<h2>Follow</h2>
+					<ul class="icons">
+						<li><a href="https://x.com/siegin403" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a></li>
+						<li>
+							<a href="https://space.bilibili.com/3690977074088362"
+							   class="icon style2 bilibili"
+							   aria-label="Bilibili"
+							   target="_blank"
+							   rel="noopener">
+								<span class="icon-inner"><img src="images/bilibili.svg" alt=""></span>
+								<span class="label">Bilibili</span>
+							</a>
+						</li>
+						<li><a href="about.html" class="icon solid style2 fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+				</section>
 
-				const slides = [
-					{ src: "images/WW1.png", alt: "WW image 1" },
-					{ src: "images/WW2.png", alt: "WW image 2" },
-					{ src: "images/WW3.png", alt: "WW image 3" }
-				];
+				<ul class="copyright">
+					<li>&copy; Untitled. All rights reserved</li>
+					<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+				</ul>
+			</div>
+		</footer>
 
-				const stage = document.getElementById("wwStage");
-				const dotsWrap = document.getElementById("wwDots");
-				const videoBox = document.getElementById("wwVideo");
-				const inner = document.querySelector("#main .inner");
+	</div>
 
-				let currentIndex = 0;
-				let currentWrap = null;
-				let isAnimating = false;
-				let dots = [];
+	<!-- Template scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
 
-				function createSlideWrap(i) {
-					const wrap = document.createElement("div");
-					wrap.className = "ww-slideWrap";
+	<!-- Video chooser -->
+	<script>
+		(function () {
+			const container = document.getElementById("video-container");
 
-					const img = document.createElement("img");
-					img.src = slides[i].src;
-					img.alt = slides[i].alt;
+			fetch("https://ipapi.co/json/")
+				.then(res => res.json())
+				.then(data => {
+					const isChina = data.country === "CN";
+					container.innerHTML = isChina
+						? `<div class="video-wrap">
+							 <iframe
+							   src="https://player.bilibili.com/player.html?bvid=你的BVID&high_quality=1&danmaku=0"
+							   allowfullscreen>
+							 </iframe>
+						   </div>`
+						: `<div class="video-wrap">
+							 <iframe
+							   src="https://www.youtube.com/embed/0hc0xK4qXK4"
+							   allowfullscreen>
+							 </iframe>
+						   </div>`;
+				})
+				.catch(() => {
+					container.innerHTML =
+						`<div class="video-wrap">
+							 <iframe
+							   src="https://www.youtube.com/embed/0hc0xK4qXK4"
+							   allowfullscreen>
+							 </iframe>
+						 </div>`;
+				});
+		})();
+	</script>
 
-					wrap.appendChild(img);
-					return wrap;
-				}
+	<!-- Slideshow + sizing logic (image and video same height) -->
+	<script>
+		(function () {
+			// --- CONFIG ---
+			const SLIDE_RATIO_W = 9;       // portrait image: 9:16
+			const SLIDE_RATIO_H = 16;
 
-				function setActiveDot(i) {
-					dots.forEach((d, di) => d.classList.toggle("is-active", di === i));
-				}
+			const VIDEO_ASPECT_W = 16;     // video: 16:9 like picture 2
+			const VIDEO_ASPECT_H = 9;
 
-				function buildDots() {
-					dotsWrap.innerHTML = "";
-					dots = slides.map((_, i) => {
-						const btn = document.createElement("button");
-						btn.type = "button";
-						btn.className = "ww-dot";
-						btn.setAttribute("aria-label", `Show slide ${i + 1}`);
-						btn.addEventListener("click", () => goTo(i));
-						dotsWrap.appendChild(btn);
-						return btn;
-					});
-				}
+			const SLIDER_RATIO_HW = 15;    // dots: height:width = 15:1
+			const GAP_PX = 18;             // MUST match CSS gap
+			const ANIM_MS = 420;
 
-				function goTo(nextIndex) {
-					if (isAnimating) return;
-					if (nextIndex === currentIndex) return;
+			const slides = [
+				{ src: "images/WW1.png", alt: "WW image 1" },
+				{ src: "images/WW2.png", alt: "WW image 2" },
+				{ src: "images/WW3.png", alt: "WW image 3" }
+			];
 
-					isAnimating = true;
+			const stage = document.getElementById("wwStage");
+			const dotsWrap = document.getElementById("wwDots");
+			const videoBox = document.getElementById("wwVideo");
+			const inner = document.querySelector("#main .inner");
 
-					const nextWrap = createSlideWrap(nextIndex);
-					nextWrap.classList.add("is-entering");
-					stage.appendChild(nextWrap);
+			let currentIndex = 0;
+			let currentWrap = null;
+			let isAnimating = false;
+			let dots = [];
 
-					// Force reflow
-					void nextWrap.offsetWidth;
+			function createSlideWrap(i) {
+				const wrap = document.createElement("div");
+				wrap.className = "ww-slideWrap";
 
-					if (currentWrap) currentWrap.classList.add("is-leaving");
-					nextWrap.classList.remove("is-entering");
+				const img = document.createElement("img");
+				img.src = slides[i].src;
+				img.alt = slides[i].alt;
 
-					window.setTimeout(() => {
-						if (currentWrap && currentWrap.parentNode === stage) stage.removeChild(currentWrap);
-						currentWrap = nextWrap;
-						currentIndex = nextIndex;
-						setActiveDot(currentIndex);
-						isAnimating = false;
-					}, ANIM_MS);
-				}
+				wrap.appendChild(img);
+				return wrap;
+			}
 
-				// Fit stage + slider + video to browser (maximize without overflow)
-				function fitToBrowser() {
-					// available width should respect the template inner container
-					const availW = Math.min(window.innerWidth, inner ? inner.clientWidth : window.innerWidth);
+			function setActiveDot(i) {
+				dots.forEach((d, di) => d.classList.toggle("is-active", di === i));
+			}
 
-					// available height: keep some breathing room for header/footer/content
-					const availH = Math.max(240, Math.floor(window.innerHeight * 0.9));
+			function buildDots() {
+				dotsWrap.innerHTML = "";
+				dots = slides.map((_, i) => {
+					const btn = document.createElement("button");
+					btn.type = "button";
+					btn.className = "ww-dot";
+					btn.setAttribute("aria-label", `Show slide ${i + 1}`);
+					btn.addEventListener("click", () => goTo(i));
+					dotsWrap.appendChild(btn);
+					return btn;
+				});
+			}
 
-					// If mobile layout stacks (slider becomes row), sizing is different
-					const isStacked = window.matchMedia("(max-width: 640px)").matches;
+			function goTo(nextIndex) {
+				if (isAnimating) return;
+				if (nextIndex === currentIndex) return;
 
-					if (isStacked) {
-						// Stage takes most of the width; height derived from ratio, but capped by availH
-						const stageW = Math.min(availW, Math.floor(window.innerWidth * 0.96));
-						const stageH = Math.min(availH, Math.floor(stageW * SLIDE_RATIO_H / SLIDE_RATIO_W));
+				isAnimating = true;
 
-						stage.style.width = stageW + "px";
-						stage.style.height = stageH + "px";
+				const nextWrap = createSlideWrap(nextIndex);
+				nextWrap.classList.add("is-entering");
+				stage.appendChild(nextWrap);
 
-						// Slider becomes a horizontal strip under stage
-						dotsWrap.style.height = "14px";
-						dotsWrap.style.width = stageW + "px";
+				void nextWrap.offsetWidth;
 
-						// Video stacks under slider; use 16:9-ish height
-						if (videoBox){
-							videoBox.style.width = stageW + "px";
-							videoBox.style.height = Math.min(availH, Math.floor(stageW * 9 / 16)) + "px";
-						}
-						return;
-					}
+				if (currentWrap) currentWrap.classList.add("is-leaving");
+				nextWrap.classList.remove("is-entering");
 
-					// Desktop (side-by-side): stage + gap + slider + gap + video
-					// stageW = h*(9/16), sliderW = h/15, videoW = h/VIDEO_RATIO_HW
-					const coeff = (SLIDE_RATIO_W / SLIDE_RATIO_H) + (1 / SLIDER_RATIO_HW) + (1 / VIDEO_RATIO_HW);
+				window.setTimeout(() => {
+					if (currentWrap && currentWrap.parentNode === stage) stage.removeChild(currentWrap);
+					currentWrap = nextWrap;
+					currentIndex = nextIndex;
+					setActiveDot(currentIndex);
+					isAnimating = false;
+				}, ANIM_MS);
+			}
 
-					// Two gaps now (stage<->slider and slider<->video)
-					let stageH = Math.min(
-						availH,
-						Math.floor((availW - (GAP_PX * 2)) / coeff)
-					);
+			function fitToBrowser() {
+				const availW = Math.min(window.innerWidth, inner ? inner.clientWidth : window.innerWidth);
+				const availH = Math.max(260, Math.floor(window.innerHeight * 0.75));
+				const isStacked = window.matchMedia("(max-width: 640px)").matches;
 
-					// Safety clamp
-					stageH = Math.max(240, stageH);
-
-					const stageW = Math.floor(stageH * SLIDE_RATIO_W / SLIDE_RATIO_H);
-					const sliderW = Math.max(40, Math.floor(stageH / SLIDER_RATIO_HW));
-					const videoW  = Math.max(220, Math.floor(stageH / VIDEO_RATIO_HW));
+				if (isStacked) {
+					// Image takes most width; video same height but full width below
+					const stageW = Math.min(availW, Math.floor(window.innerWidth * 0.96));
+					const stageH = Math.min(availH, Math.floor(stageW * SLIDE_RATIO_H / SLIDE_RATIO_W));
 
 					stage.style.width = stageW + "px";
 					stage.style.height = stageH + "px";
 
 					dotsWrap.style.height = stageH + "px";
-					dotsWrap.style.width = sliderW + "px";
+					dotsWrap.style.width = Math.max(40, Math.floor(stageH / SLIDER_RATIO_HW)) + "px";
 
-					if (videoBox){
-						videoBox.style.height = stageH + "px";
-						videoBox.style.width = videoW + "px";
-					}
+					// video below: use 16:9 sizing by width
+					const videoW = stageW;
+					const videoH = Math.floor(videoW * VIDEO_ASPECT_H / VIDEO_ASPECT_W);
+
+					videoBox.style.width = videoW + "px";
+					videoBox.style.height = videoH + "px";
+					return;
 				}
 
-				// Init
-				buildDots();
-				currentWrap = createSlideWrap(0);
-				stage.appendChild(currentWrap);
-				setActiveDot(0);
+				// Desktop: total width = stageW + gap + dotsW + gap + videoW
+				// stageW = h*(9/16)
+				// dotsW  = h/15
+				// videoW = h*(16/9)
+				const coeff =
+					(SLIDE_RATIO_W / SLIDE_RATIO_H) +
+					(1 / SLIDER_RATIO_HW) +
+					(VIDEO_ASPECT_W / VIDEO_ASPECT_H);
 
-				window.addEventListener("load", fitToBrowser);
-				window.addEventListener("resize", fitToBrowser);
-			})();
-		</script>
-	</body>
+				let h = Math.min(
+					availH,
+					Math.floor((availW - (GAP_PX * 2)) / coeff)
+				);
+
+				h = Math.max(260, h);
+
+				const stageW = Math.floor(h * SLIDE_RATIO_W / SLIDE_RATIO_H);
+				const dotsW  = Math.max(44, Math.floor(h / SLIDER_RATIO_HW));
+				const videoW = Math.floor(h * VIDEO_ASPECT_W / VIDEO_ASPECT_H);
+
+				stage.style.width = stageW + "px";
+				stage.style.height = h + "px";
+
+				dotsWrap.style.height = h + "px";
+				dotsWrap.style.width = dotsW + "px";
+
+				videoBox.style.height = h + "px";
+				videoBox.style.width = videoW + "px";
+			}
+
+			// Init
+			buildDots();
+			currentWrap = createSlideWrap(0);
+			stage.appendChild(currentWrap);
+			setActiveDot(0);
+
+			window.addEventListener("load", fitToBrowser);
+			window.addEventListener("resize", fitToBrowser);
+		})();
+	</script>
+</body>
 </html>
